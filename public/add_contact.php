@@ -121,6 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Dolphin CRM | New Contact</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
@@ -132,10 +133,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="layout">
 
     <aside class="sidebar">
-        <a href="dashboard.php">Home</a>
-        <a href="add_contact.php" class="active">New Contact</a>
-        <a href="users.php">Users</a>
-        <a href="logout.php">Logout</a>
+        <a href="dashboard.php" class="active">
+            <i class="fa-regular fa-house"></i>
+            Home
+        </a>
+
+        <a href="add_contact.php">
+            <i class="fa-solid fa-user-plus"></i>
+            New Contact
+        </a>
+
+        <a href="users.php">
+            <i class="fa-solid fa-users"></i>
+            Users
+        </a>
+
+        <a href="logout.php">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+        </a>
     </aside>
 
     <main class="content">

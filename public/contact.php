@@ -1,5 +1,4 @@
 <?php
-// public/contact.php
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers/auth.php';
@@ -22,13 +21,13 @@ $errors = [];
 $success = "";
 
 /*
-|--------------------------------------------------------------------------
-| Handle POST actions
-|--------------------------------------------------------------------------
-| We use a hidden field named "action" to determine what to do:
-| - assign_to_me
-| - toggle_type
-| - add_note
+
+ Handle POST actions
+
+ We use a hidden field named "action" to determine what to do:
+ - assign_to_me
+ - toggle_type
+ - add_note
 */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
@@ -98,11 +97,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Fetch contact details (with created_by name and assigned_to name)
-|--------------------------------------------------------------------------
-*/
+
+// Fetch contact details (with created_by name and assigned_to name)
+
 $contactStmt = db()->prepare("
     SELECT
         c.*,
@@ -122,11 +119,9 @@ if (!$contact) {
     exit;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Fetch notes for this contact
-|--------------------------------------------------------------------------
-*/
+
+// Fetch notes for this contact
+
 $notesStmt = db()->prepare("
     SELECT
         n.comment,
@@ -149,6 +144,7 @@ $toggleLabel = ($contact['type'] === 'Sales Lead') ? 'Switch to Support' : 'Swit
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Dolphin CRM | Contact Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
@@ -160,10 +156,25 @@ $toggleLabel = ($contact['type'] === 'Sales Lead') ? 'Switch to Support' : 'Swit
 <div class="layout">
 
     <aside class="sidebar">
-        <a href="dashboard.php">Home</a>
-        <a href="add_contact.php">New Contact</a>
-        <a href="users.php">Users</a>
-        <a href="logout.php">Logout</a>
+        <a href="dashboard.php" class="active">
+            <i class="fa-regular fa-house"></i>
+            Home
+        </a>
+
+        <a href="add_contact.php">
+            <i class="fa-solid fa-user-plus"></i>
+            New Contact
+        </a>
+
+        <a href="users.php">
+            <i class="fa-solid fa-users"></i>
+            Users
+        </a>
+
+        <a href="logout.php">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+        </a>
     </aside>
 
     <main class="content">
@@ -196,12 +207,12 @@ $toggleLabel = ($contact['type'] === 'Sales Lead') ? 'Switch to Support' : 'Swit
             <div class="contact-actions">
                 <form method="POST" style="display:inline;">
                     <input type="hidden" name="action" value="assign_to_me">
-                    <button type="submit" class="btn-success">Assign to me</button>
+                    <button type="submit" class="btn-success"><i class="fa-solid fa-hand"></i> Assign to me</button>
                 </form>
 
                 <form method="POST" style="display:inline;">
                     <input type="hidden" name="action" value="toggle_type">
-                    <button type="submit" class="btn-warning"><?= e($toggleLabel) ?></button>
+                    <button type="submit" class="btn-warning"><i class="fa-solid fa-repeat"></i> <?= e($toggleLabel) ?></button>
                 </form>
             </div>
         </div>

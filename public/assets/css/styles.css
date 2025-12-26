@@ -165,17 +165,45 @@ body{
   padding: 20px;
 }
 
-.sidebar a {
+/* .sidebar a {
   display: block;
   color: #cbd5e1;
   text-decoration: none;
   margin-bottom: 12px;
+} */
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    color: #cbd5e1;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
 }
 
-.sidebar a.active,
+.sidebar a i {
+    width: 18px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* .sidebar a.active,
 .sidebar a:hover {
   color: #fff;
   font-weight: bold;
+} */
+
+
+
+.sidebar a.active {
+    font-weight: 800;
+    color: #cbd5e1;
+}
+
+.sidebar a:hover {
+    background: #f3f4f6;
+    color: #111827;
 }
 
 .content {
@@ -336,8 +364,8 @@ body{
 }
 
 .btn-success{
-  background:#22c55e;
-  color:#fff;
+  background:#18a14a;
+  color:#111827;
   border:0;
   padding:10px 12px;
   border-radius:6px;
