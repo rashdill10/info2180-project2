@@ -89,10 +89,13 @@ Edit the database configuration file
 
 Ensure credentials match your MySQL setup:
 
-- $host = 'localhost'; // or 127.0.0.1
-- $dbname = 'dolphin_crm'; // your MySQL database goes here
-- $user = ''; // your MySQL username goes here
-- $pass = ''; // your MySQL password goes here
+```
+$host = 'localhost'; // or 127.0.0.1
+$dbname = 'dolphin_crm'; // your MySQL database goes here
+$user = ''; // your MySQL username goes here
+$pass = ''; // your MySQL password goes here
+
+```
 
 ### 5. Run The Application
 
