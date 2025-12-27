@@ -8,8 +8,8 @@ function db(): PDO {
     if ($pdo === null) {
         $host = 'localhost'; //127.0.0.1
         $dbname = 'dolphin_crm';
-        $user = 'damion';
-        $pass = '0524';
+        $user = '';
+        $pass = '';
         $charset = 'utf8mb4';
 
         $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
