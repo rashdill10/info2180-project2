@@ -1,3 +1,10 @@
+-- Create database
+CREATE DATABASE IF NOT EXISTS dolphin_crm
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE dolphin_crm;
+
 -- Creating the user table 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -49,4 +56,18 @@ CREATE TABLE notes (
     CONSTRAINT fk_notes_user
         FOREIGN KEY (created_by) REFERENCES users(id)
         ON DELETE CASCADE
+);
+
+-- Insert default Admin user
+-- Email: admin@project2.com
+-- Password: password123
+INSERT INTO users (firstname, lastname, email, password, role)
+SELECT
+    'Admin',
+    'User',
+    'admin@project2.com',
+    '$2y$10$YcDIrz0uKeLx5mxanycP8uI19TNhFq4THaVXmyUP17Wud8IyCu16O',
+    'Admin'
+WHERE NOT EXISTS (
+    SELECT 1 FROM users WHERE email = 'admin@project2.com'
 );
