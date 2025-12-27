@@ -81,7 +81,7 @@ This will:
     - Email: admin@project2.com
     - Password: password123
 
-### 4. COnfigure Database Connection
+### 4. Configure Database Connection
 
 Edit the database configuration file
 
