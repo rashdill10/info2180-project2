@@ -98,7 +98,7 @@ Ensure credentials match your MySQL setup:
 
 Start Apache and MySQL, then visit:
 
-- http://localhost/info2180-project2/public/login.php
+- localhost/info2180-project2/public/login.php
 
 
 - Note you can change your DocumentRoot path to;
