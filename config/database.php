@@ -1,5 +1,5 @@
 <?php
-// config/database.php
+
 declare(strict_types=1);
 
 function db(): PDO {

@@ -245,12 +245,17 @@ body{
   width: 100%;
   border-collapse: collapse;
   background: #fff;
+  text-align: left;
 }
 
 .contacts-table th,
 .contacts-table td {
   padding: 12px;
   border-bottom: 1px solid #e5e7eb;
+}
+
+.contacts-table tr{
+  text-align: left;
 }
 
 .badge {

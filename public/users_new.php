@@ -1,8 +1,9 @@
 <?php
-// public/users_new.php
+
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers/auth.php';
+require_once __DIR__ . '/../src/helpers/partial.php';
 
 require_admin(); // only Admin can add users
 
@@ -91,6 +92,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+
+// Page Content (this is what partial=1 returns)
+ob_start();
+?>
+<div class="page-header">
+    <h1>New User</h1>
+</div>
+
+<div class="panel">
+    <?php if (!empty($success)): ?>
+        <div class="alert success"><?= e($success) ?></div>
+    <?php endif; ?>
+
+    <?php if (!empty($errors)): ?>
+        <div class="alert error">
+            <ul>
+                <?php foreach ($errors as $err): ?>
+                    <li><?= e($err) ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <form id="newUserForm" class="form-grid" method="post" novalidate>
+
+        <div class="field">
+            <label for="firstname">First Name</label>
+            <input class="input" type="text" id="firstname" name="firstname"
+                   value="<?= e($firstname) ?>" required>
+        </div>
+
+        <div class="field">
+            <label for="lastname">Last Name</label>
+            <input class="input" type="text" id="lastname" name="lastname"
+                   value="<?= e($lastname) ?>" required>
+        </div>
+
+        <div class="field">
+            <label for="email">Email</label>
+            <input class="input" type="email" id="email" name="email"
+                   value="<?= e($email) ?>" required>
+        </div>
+
+        <div class="field">
+            <label for="password">Password</label>
+            <input class="input" type="password" id="password" name="password" required
+                   placeholder="At least 8 chars, 1 uppercase, 1 number">
+        </div>
+
+        <div class="field full">
+            <label for="role">Role</label>
+            <select class="input" id="role" name="role">
+                <option value="Member" <?= $role === 'Member' ? 'selected' : '' ?>>Member</option>
+                <option value="Admin" <?= $role === 'Admin' ? 'selected' : '' ?>>Admin</option>
+            </select>
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn-primary">Save</button>
+        </div>
+
+    </form>
+</div>
+<?php
+$pageContent = ob_get_clean();
+
+if (is_partial_request()) {
+    echo $pageContent;
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -99,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Dolphin CRM | New User</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
@@ -110,94 +182,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="layout">
 
-    <!-- Sidebar -->
     <aside class="sidebar">
-        <a href="dashboard.php" class="active">
-            <i class="fa-regular fa-house"></i>
-            Home
+        <a href="dashboard.php">
+            <i class="fa-solid fa-house"></i> Home
         </a>
 
         <a href="add_contact.php">
-            <i class="fa-solid fa-user-plus"></i>
-            New Contact
+            <i class="fa-solid fa-user-plus"></i> New Contact
         </a>
 
-        <a href="users.php">
-            <i class="fa-solid fa-users"></i>
-            Users
+        <a href="users.php" class="active">
+            <i class="fa-solid fa-users"></i> Users
         </a>
 
         <a href="logout.php">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            Logout
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
         </a>
     </aside>
 
-    <!-- Main content -->
     <main class="content">
+        <div id="appFlash"></div>
 
-        <div class="page-header">
-            <h1>New User</h1>
+        <div id="appContent">
+            <?= $pageContent ?>
         </div>
-
-        <div class="panel">
-            <?php if (!empty($success)): ?>
-                <div class="alert success"><?= e($success) ?></div>
-            <?php endif; ?>
-
-            <?php if (!empty($errors)): ?>
-                <div class="alert error">
-                    <ul>
-                        <?php foreach ($errors as $err): ?>
-                            <li><?= e($err) ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
-
-            <form method="POST" action="users_new.php" class="form-grid" novalidate>
-
-                <div class="field">
-                    <label for="firstname">First Name</label>
-                    <input class="input" type="text" id="firstname" name="firstname"
-                           value="<?= e($firstname) ?>" required>
-                </div>
-
-                <div class="field">
-                    <label for="lastname">Last Name</label>
-                    <input class="input" type="text" id="lastname" name="lastname"
-                           value="<?= e($lastname) ?>" required>
-                </div>
-
-                <div class="field">
-                    <label for="email">Email</label>
-                    <input class="input" type="email" id="email" name="email"
-                           value="<?= e($email) ?>" required>
-                </div>
-
-                <div class="field">
-                    <label for="password">Password</label>
-                    <input class="input" type="password" id="password" name="password" required
-                           placeholder="At least 8 chars, 1 uppercase, 1 number">
-                </div>
-
-                <div class="field full">
-                    <label for="role">Role</label>
-                    <select class="input" id="role" name="role">
-                        <option value="Member" <?= $role === 'Member' ? 'selected' : '' ?>>Member</option>
-                        <option value="Admin" <?= $role === 'Admin' ? 'selected' : '' ?>>Admin</option>
-                    </select>
-                </div>
-
-                <div class="actions">
-                    <button type="submit" class="btn-primary">Save</button>
-                </div>
-
-            </form>
-        </div>
-
     </main>
 </div>
 
+<script src="assets/js/app.js"></script>
 </body>
 </html>

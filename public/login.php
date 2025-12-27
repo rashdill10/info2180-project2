@@ -1,9 +1,53 @@
 <?php
-// public/login.php
+
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../src/helpers/partial.php';
 
 $error = $_GET['error'] ?? '';
 ?>
+
+<?php
+// Build only the inner login content (for partial requests)
+ob_start();
+?>
+<section class="card">
+  <h1>Login</h1>
+
+  <div class="form">
+    <?php if ($error === 'invalid'): ?>
+      <div class="alert">Invalid email or password.</div>
+    <?php elseif ($error === 'missing'): ?>
+      <div class="alert">Please enter your email and password.</div>
+    <?php endif; ?>
+
+    <form action="authenticate.php" method="POST" autocomplete="off">
+      <div class="field">
+        <input class="input" type="email" name="email" placeholder="Email address" required />
+      </div>
+
+      <div class="field">
+        <input class="input" type="password" name="password" placeholder="Password" required />
+      </div>
+
+      <button class="btn" type="submit">
+        <span class="lock">🔒</span>
+        Login
+      </button>
+    </form>
+  </div>
+
+  <p class="copyright">Copyright © <?= date('Y') ?> <?= APP_NAME ?></p>
+</section>
+<?php
+$pageContent = ob_get_clean();
+
+// If partial request, return ONLY the card (no <html>, no navbar)
+if (is_partial_request()) {
+    echo $pageContent;
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,33 +66,7 @@ $error = $_GET['error'] ?? '';
   </header>
 
   <main class="main">
-    <section class="card">
-      <h1>Login</h1>
-      
-      <div class="form">
-        <?php if ($error === 'invalid'): ?>
-          <div class="alert">Invalid email or password.</div>
-        <?php elseif ($error === 'missing'): ?>
-          <div class="alert">Please enter your email and password.</div>
-        <?php endif; ?>
-
-        <form action="authenticate.php" method="POST" autocomplete="off">
-          <div class="field">
-            <input class="input" type="email" name="email" placeholder="Email address" required />
-          </div>
-
-          <div class="field">
-            <input class="input" type="password" name="password" placeholder="Password" required />
-          </div>
-
-          <button class="btn" type="submit">
-            <span class="lock">🔒</span>
-            Login
-          </button>
-        </form>
-      </div>
-      <p class="copyright">Copyright © <?= date('Y') ?> <?= APP_NAME ?></p>
-    </section>
+    <?= $pageContent ?>
   </main>
 
 </body>

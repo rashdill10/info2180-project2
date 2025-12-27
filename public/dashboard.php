@@ -1,19 +1,21 @@
 <?php
-// public/dashboard.php
+
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/helpers/auth.php';
+require_once __DIR__ . '/../src/helpers/partial.php';
 
 require_login();
 
-$userId = $_SESSION['user_id'];
+function e(string $v): string {
+    return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
+}
+
+$userId = (int)($_SESSION['user_id'] ?? 0);
 $filter = $_GET['filter'] ?? 'all';
 
-/*
-|--------------------------------------------------------------------------
-| Build SQL based on filter
-|--------------------------------------------------------------------------
-*/
+
+// Build SQL based on filter
 $sql = "
     SELECT 
         c.id,
@@ -25,7 +27,6 @@ $sql = "
         c.type
     FROM contacts c
 ";
-
 $params = [];
 
 if ($filter === 'sales') {
@@ -42,6 +43,63 @@ $sql .= " ORDER BY c.created_at DESC";
 $stmt = db()->prepare($sql);
 $stmt->execute($params);
 $contacts = $stmt->fetchAll();
+
+
+// Page Content (this is what AJAX loads)
+ob_start();
+?>
+<div class="page-header">
+    <h1>Dashboard</h1>
+    <a href="add_contact.php" class="btn-primary">+ Add Contact</a>
+</div>
+
+<div class="filters">
+    <span>Filter By:</span>
+    <a href="dashboard.php?filter=all" class="<?= $filter === 'all' ? 'active' : '' ?>" data-filter-link data-filter="all">All</a>
+    <a href="dashboard.php?filter=sales" class="<?= $filter === 'sales' ? 'active' : '' ?>" data-filter-link data-filter="sales">Sales Leads</a>
+    <a href="dashboard.php?filter=support" class="<?= $filter === 'support' ? 'active' : '' ?>" data-filter-link data-filter="support">Support</a>
+    <a href="dashboard.php?filter=assigned" class="<?= $filter === 'assigned' ? 'active' : '' ?>" data-filter-link data-filter="assigned">Assigned to me</a>
+</div>
+
+<table class="contacts-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Company</th>
+            <th>Type</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="contactsTbody">
+        <?php if (empty($contacts)): ?>
+            <tr><td colspan="5">No contacts found.</td></tr>
+        <?php else: ?>
+            <?php foreach ($contacts as $c): ?>
+                <tr>
+                    <td><?= e($c['title'].' '.$c['firstname'].' '.$c['lastname']) ?></td>
+                    <td><?= e($c['email']) ?></td>
+                    <td><?= e($c['company']) ?></td>
+                    <td>
+                        <span class="badge <?= $c['type'] === 'Sales Lead' ? 'badge-sales' : 'badge-support' ?>">
+                            <?= e($c['type']) ?>
+                        </span>
+                    </td>
+                    <td><a href="contact.php?id=<?= (int)$c['id'] ?>">View</a></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </tbody>
+</table>
+<?php
+$pageContent = ob_get_clean();
+
+
+// If partial request, return ONLY the inner content
+if (is_partial_request()) {
+    echo $pageContent;
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -59,8 +117,6 @@ $contacts = $stmt->fetchAll();
 </header>
 
 <div class="layout">
-
-    <!-- Sidebar -->
     <aside class="sidebar">
         <a href="dashboard.php" class="active">
             <i class="fa-regular fa-house"></i>
@@ -83,64 +139,14 @@ $contacts = $stmt->fetchAll();
         </a>
     </aside>
 
-    <!-- Main Content -->
     <main class="content">
-
-        <div class="page-header">
-            <h1>Dashboard</h1>
-            <a href="add_contact.php" class="btn-primary">+ Add Contact</a>
+        <div id="appFlash"></div>
+        <div id="appContent">
+            <?= $pageContent ?>
         </div>
-
-        <!-- Filters -->
-        <div class="filters">
-            <span>Filter By:</span>
-            <a href="?filter=all" class="<?= $filter === 'all' ? 'active' : '' ?>">All</a>
-            <a href="?filter=sales" class="<?= $filter === 'sales' ? 'active' : '' ?>">Sales Leads</a>
-            <a href="?filter=support" class="<?= $filter === 'support' ? 'active' : '' ?>">Support</a>
-            <a href="?filter=assigned" class="<?= $filter === 'assigned' ? 'active' : '' ?>">Assigned to me</a>
-        </div>
-
-        <!-- Contacts Table -->
-        <table class="contacts-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Company</th>
-                    <th>Type</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (empty($contacts)): ?>
-                    <tr>
-                        <td colspan="5">No contacts found.</td>
-                    </tr>
-                <?php else: ?>
-                    <?php foreach ($contacts as $c): ?>
-                        <tr>
-                            <td>
-                                <?= htmlspecialchars($c['title'] . ' ' . $c['firstname'] . ' ' . $c['lastname']) ?>
-                            </td>
-                            <td><?= htmlspecialchars($c['email']) ?></td>
-                            <td><?= htmlspecialchars($c['company']) ?></td>
-                            <td>
-                                <span class="badge <?= $c['type'] === 'Sales Lead' ? 'badge-sales' : 'badge-support' ?>">
-                                    <?= htmlspecialchars($c['type']) ?>
-                                </span>
-                            </td>
-                            <td>
-                                <a href="contact.php?id=<?= $c['id'] ?>">View</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
-
     </main>
-
 </div>
 
+<script src="assets/js/app.js"></script>
 </body>
 </html>
