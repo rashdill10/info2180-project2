@@ -101,12 +101,12 @@ Start Apache and MySQL, then visit:
 - localhost/info2180-project2/public/login.php
 
 
-- Note you can change your DocumentRoot path to;
+- Note you can change your **DocumentRoot** path to;
     - lampp/htdocs/info2180-project2/public
 
   and then add
     - login.php
-  to your DirectoryIndex
+  to your **DirectoryIndex**
 
 This way you can just launch the Application with just
 - localhost:80
