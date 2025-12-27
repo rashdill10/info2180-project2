@@ -100,9 +100,9 @@ $pass = ''; // your MySQL password goes here
 ### 5. Run The Application
 
 Start Apache and MySQL, then visit:
+
 ```
 localhost/info2180-project2/public/login.php
-
 ```
 
 
@@ -114,7 +114,7 @@ localhost/info2180-project2/public/login.php
   to your **DirectoryIndex**
 
 This way you can just launch the Application with just
+
 ```
 localhost:80
-
 ```
